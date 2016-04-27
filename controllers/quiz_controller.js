@@ -12,3 +12,7 @@
  	var result = ((answer === 'Roma') ? 'Correcta' : 'Incorrecta');
  	res.render('quizes/result', {result: result, answer: answer});
  };
+
+ exports.author = function (req, res) {
+ 	res.render('author');
+ };
