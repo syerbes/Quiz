@@ -1,15 +1,25 @@
 var models = require('../models');
 
+
+// GET /quizes
+ exports.index = function(req, res, next) {
+ 	models.Quiz.findAll()
+ 	.then(function(quizes) {
+ 		res.render('quizes/index.ejs', { quizes: quizes});
+ 	})
+ 	.catch(function(error) { next(error) });
+ };
+
 // GET /quizes/question
- exports.question = function(req, res, next) {
- 	models.Quiz.findOne()
+ exports.show = function(req, res, next) {
+ 	models.Quiz.findById(req.params.quizId)
  		.then(function(quiz){
  			if (quiz) {
  				var answer = req.query.answer || '';
- 				res.render('quizes/question', {question: quiz.question, answer: answer});
+ 				res.render('quizes/show', {quiz: quiz, answer: answer});
  			}
  			else {
- 				throw new Error('No hay preguntas en la BBDD.');
+ 				throw new Error('No existe ese quiz en la BBDD.');
  			}
  		}).catch(function(error) {
  			next(error);
@@ -18,15 +28,15 @@ var models = require('../models');
  
  // GET /quizes/answer
  exports.check = function(req, res, next) {
- 	models.Quiz.findOne()
+ 	models.Quiz.findById(req.params.quizId)
  		.then(function(quiz){
  			if (quiz) {
  				var answer = req.query.answer || '';
  				var result = answer === quiz.answer ? 'Correcta' : 'Incorrecta';
- 				res.render('quizes/result', { result: result, answer: answer});
+ 				res.render('quizes/result', { quiz: quiz, result: result, answer: answer});
  			}
  			else {
- 				throw new Error('No hay preguntas en la BBDD.');
+ 				throw new Error('No existe ese quiz en la BBDD.');
  			}
  		}).catch(function(error) {
  			next(error);
